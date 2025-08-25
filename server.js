@@ -33,6 +33,9 @@ app.post('/notify', async (req, res) => {
     notification: {
       title: 'Lemur Notificador',
       body: `🔔 ${nome} está chamando você!`
+    },
+    data: {
+      nome: nome
     }
   };
 
