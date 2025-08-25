@@ -6,13 +6,21 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Inicializa o Firebase com sua chave
-const serviceAccount = require('./FIREBASE_KEY_JSON.json');
+// 🔐 Inicializa o Firebase com chave vinda de variável de ambiente
+const firebaseKey = process.env.FIREBASE_KEY_JSON;
+
+if (!firebaseKey) {
+  console.error('❌ Variável FIREBASE_KEY_JSON não definida.');
+  process.exit(1);
+}
+
+const serviceAccount = JSON.parse(firebaseKey);
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 
-// Rota padrão para notificação
+// 🚨 Rota padrão para notificação
 app.post('/notify', async (req, res) => {
   const { token, nome } = req.body;
 
@@ -38,7 +46,7 @@ app.post('/notify', async (req, res) => {
   }
 });
 
-// Inicia o servidor
+// 🚀 Inicia o servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando na porta ${PORT}`);
